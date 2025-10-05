@@ -1,68 +1,58 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
 import Header from "../(components)/Header";
 import FooterNav from "../(components)/FooterNav";
-import { CULTURES } from "@/data/cultures.seed";
 import { getTodayEvent } from "@/data/dailyEvent.seed";
-import { POSTS } from "@/data/posts.seed";
-
+import { useFeedStore } from "@/store/useFeedStore";
+import { useSearchParams } from "next/navigation";
 
 export default function InfoPage() {
-  const params = useSearchParams();
-  const culture = params.get("culture");
   const { title, description } = getTodayEvent();
-  const totalPosts = POSTS.length;
-  const uniqueCultures = new Set(POSTS.map(p => p.culture)).size;
-  const blurb = culture && CULTURES[culture];
+  const posts = useFeedStore((s) => s.posts) || [];
+  const params = useSearchParams();
+  const cultureParam = params.get("culture");
+
+  // stats (today)
+  const totalPosts = posts.length;
+  const uniqueCultures = new Set(posts.map((p) => p.culture)).size;
+
+  const cultureBlurb = cultureParam
+    ? `You're exploring ${cultureParam}. Tap culture chips in the feed to learn more about how people share this from different places.`
+    : null;
 
   return (
     <>
       <Header />
-      <main className="p-4 space-y-4">
-        {/* Today's event */}
-        <section className="rounded-xl border p-4 bg-white">
-          <h2 className="text-base font-semibold">About today’s event</h2>
-          <p className="text-sm mt-2">
-            <span className="font-medium">{title}</span>
-          </p>
-          <p className="text-sm text-gray-700 mt-1">{description}</p>
-        </section>
-
-        {/* Optional culture spotlight */}
-        {culture && (
-          <section className="rounded-xl border p-4 bg-white">
-            <h3 className="text-base font-semibold">{culture}</h3>
-            <p className="text-sm text-gray-700 mt-2">
-              {blurb || "No details yet — check back soon."}
+      <main className="p-4 space-y-5">
+        {/* Event explainer (full) */}
+        <section className="rounded-2xl border border-gray-200 bg-white shadow-sm">
+          <div className="p-4 md:p-5">
+            <h2 className="text-lg font-semibold">About today’s event</h2>
+            <p className="mt-1 text-sm text-gray-900 font-medium">{title}</p>
+            <p className="mt-2 text-sm text-gray-700 leading-relaxed">
+              {description}
             </p>
-          </section>
-        )}
 
-        <section className="rounded-xl border p-4 bg-white">
-        <h2 className="text-base font-semibold">About today’s event</h2>
-        <p className="text-sm mt-2"><span className="font-medium">{title}</span></p>
-        <p className="text-sm text-gray-700 mt-1">{description}</p>
+            {/* quick stats (posts + cultures) */}
+            <div className="mt-4 grid grid-cols-2 gap-3 text-center">
+              <div className="rounded-xl bg-gray-50 p-3 border border-gray-100">
+                <div className="text-xl font-semibold">{totalPosts}</div>
+                <div className="text-xs text-gray-600">posts today</div>
+              </div>
+              <div className="rounded-xl bg-gray-50 p-3 border border-gray-100">
+                <div className="text-xl font-semibold">{uniqueCultures}</div>
+                <div className="text-xs text-gray-600">cultures today</div>
+              </div>
+            </div>
 
-        {/* quick stats */}
-        <div className="mt-3 grid grid-cols-2 gap-2 text-center">
-            <div className="rounded-lg bg-gray-50 p-2">
-            <div className="text-lg font-semibold">{totalPosts}</div>
-            <div className="text-xs text-gray-600">posts today</div>
-            </div>
-            <div className="rounded-lg bg-gray-50 p-2">
-            <div className="text-lg font-semibold">{uniqueCultures}</div>
-            <div className="text-xs text-gray-600">cultures today</div>
-            </div>
-        </div>
+            {/* optional culture spotlight */}
+            {cultureBlurb && (
+              <div className="mt-4 rounded-xl bg-indigo-50/80 border border-indigo-100 p-3 text-indigo-900 text-sm">
+                {cultureBlurb}
+              </div>
+            )}
+          </div>
         </section>
-
-
-        {!culture && (
-          <p className="text-xs text-gray-500">
-            Tip: tap a culture chip on a post to learn more about it here.
-          </p>
-        )}
       </main>
       <FooterNav />
     </>

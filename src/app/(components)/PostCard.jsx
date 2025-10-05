@@ -1,5 +1,4 @@
 import { getTodayEvent } from "@/data/dailyEvent.seed";
-import CultureChip from "./CultureChip";
 
 export default function PostCard({ post }) {
   const { title } = getTodayEvent();
@@ -19,34 +18,52 @@ export default function PostCard({ post }) {
   };
 
   return (
-    <article className="rounded-2xl overflow-hidden shadow-sm border bg-white">
-      <div className="w-full bg-gray-100 overflow-hidden" style={{ height: 256 }}>
+    <article className="rounded-3xl overflow-hidden shadow-sm ring-1 ring-black/5 bg-white">
+      {/* Image wrapper */}
+      <div className="relative w-full bg-gray-100" style={{ height: 320 }}>
         <img
           src={post.imageUrl}
           alt={`${post.culture}: ${post.caption}`}
           className="w-full h-full object-cover block"
           loading="lazy"
           referrerPolicy="no-referrer"
-          onError={handleError}   // ← comment removed; prop kept
+          onError={handleError}
         />
-      </div>
 
-      <div className="p-3 space-y-2">
-        <div className="flex items-center justify-between">
-          <p className="text-sm font-medium">{post.userName}</p>
-          <span className="text-xs text-gray-500">{post.country}</span>
-        </div>
-        <p className="text-sm">{post.caption}</p>
-        <div className="flex gap-2 flex-wrap">
-          <CultureChip name={post.culture} />
-          <span className="inline-block rounded-full bg-indigo-50 px-3 py-1 text-xs font-medium text-indigo-700">
-            {title}
-          </span>
-          {post.theme && (
-            <span className="inline-block rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700">
-                {post.theme}
+        {/* removed top-right country pill */}
+
+        {/* gradient fade for legibility */}
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black/70 via-black/40 to-transparent" />
+
+        {/* bottom overlay content */}
+        <div className="absolute inset-x-0 bottom-0 p-3 text-white">
+          {/* name */}
+          <div className="text-sm font-medium drop-shadow-sm">{post.userName}</div>
+
+          {/* caption */}
+          <p className="text-[13px] leading-snug mt-0.5 drop-shadow-sm line-clamp-2">
+            {post.caption}
+          </p>
+
+          {/* chips row (origin + event + optional theme) */}
+          <div className="mt-2 flex gap-2 flex-wrap">
+            {/* origin chip */}
+            <span className="inline-block rounded-full bg-white/85 text-gray-800 text-[11px] px-2 py-1">
+              {post.origin || post.culture}
             </span>
+
+            {/* event chip */}
+            <span className="inline-block rounded-full bg-indigo-200/90 text-indigo-900 text-[11px] px-2 py-1">
+              {title}
+            </span>
+
+            {/* theme chip */}
+            {post.theme && (
+              <span className="inline-block rounded-full bg-emerald-200/90 text-emerald-900 text-[11px] px-2 py-1">
+                {post.theme}
+              </span>
             )}
+          </div>
         </div>
       </div>
     </article>

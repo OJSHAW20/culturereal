@@ -2,8 +2,8 @@
 import { useFeedStore } from "@/store/useFeedStore";
 
 const THEMES = [
-  "Random",        // special
-  "All",           // special
+  "Random",
+  "All",
   "Sharing a meal",
   "Being with family",
   "Partying",
@@ -16,17 +16,21 @@ export default function ThemeFilter() {
   const setSelectedTheme = useFeedStore((s) => s.setSelectedTheme);
 
   return (
-    <div className="px-4 pt-3">
-      <label className="block text-xs text-gray-600 mb-1">Explore by theme</label>
-      <select
-        value={selectedTheme}
-        onChange={(e) => setSelectedTheme(e.target.value)}
-        className="w-full rounded-lg border px-3 py-2 text-sm bg-white"
-      >
-        {THEMES.map((t) => (
-          <option key={t} value={t}>{t}</option>
-        ))}
-      </select>
+    <div className="mt-3 mb-1">
+      <div className="flex items-center justify-between gap-3">
+        <h2 className="text-[15px] font-semibold text-gray-800">
+          Explore by theme
+        </h2>
+        <select
+          value={selectedTheme}
+          onChange={(e) => setSelectedTheme(e.target.value)}
+          className="w-44 rounded-full border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm hover:border-gray-400 focus:outline-none"
+        >
+          {THEMES.map((t) => (
+            <option key={t} value={t}>{t}</option>
+          ))}
+        </select>
+      </div>
     </div>
   );
 }
