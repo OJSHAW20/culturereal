@@ -1,0 +1,51 @@
+export const POSTS = [
+    {
+      id: "p1",
+      userName: "Aisha",
+      culture: "Yoruba",
+      country: "Nigeria",
+      imageUrl: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4",
+      caption: "Jollof on a Sunday 🥘",
+    },
+    {
+      id: "p2",
+      userName: "Euan",
+      culture: "Gaelic",
+      country: "Scotland",
+      imageUrl: "https://images.unsplash.com/photo-1501785888041-af3ef285b470",
+      caption: "Ceilidh tonight at the hall",
+    },
+    {
+      id: "p3",
+      userName: "Rojin",
+      culture: "Kurdish",
+      country: "Iraq",
+      imageUrl: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee",
+      caption: "Nowruz colours 🌼",
+    },
+    {
+      id: "p4",
+      userName: "Tane",
+      culture: "Māori",
+      country: "Aotearoa NZ",
+      imageUrl: "https://images.unsplash.com/photo-1519681393784-d120267933ba",
+      caption: "Kapa haka practice",
+    },
+    {
+      id: "p5",
+      userName: "Elle",
+      culture: "Sámi",
+      country: "Norway",
+      imageUrl: "https://images.unsplash.com/photo-1519681390534-8f8f1a6d6d8d",
+      caption: "Duodji workshop",
+    },
+    {
+      id: "p6",
+      userName: "Kabir",
+      culture: "Punjabi",
+      country: "India",
+      imageUrl: "https://images.unsplash.com/photo-1526318472351-c75fcf070305",
+      caption: "Paranda braids for the festival",
+    },
+  ];
+  
