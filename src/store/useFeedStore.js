@@ -1,29 +1,31 @@
 import { create } from "zustand";
 import { POSTS } from "@/data/posts.seed";
-import { getJSON, setJSON } from "@/lib/storage";
 
-const dayKey = () => new Date().toISOString().slice(0, 10);
+const SEED_VERSION = "diwali-v1"; // bump this when you change seeds
 
-export const useFeedStore = create((set, get) => ({
-  todayKey: dayKey(),
+export const useFeedStore = create((set) => ({
   posts: [],
-  selectedTheme: "Random",
-  setSelectedTheme: (t) => set({ selectedTheme: t }),
-
   init: () => {
-    const key = dayKey();
-    const stored = getJSON("posts:" + key, null);
-    const posts = stored || POSTS;
-    set({ todayKey: key, posts });
-    if (!stored) {
-      setJSON("posts:" + key, posts);
+    if (typeof window === "undefined") return;
+
+    const storedVersion = localStorage.getItem("seedVersion");
+    const storedPosts = localStorage.getItem("posts:today");
+
+    if (!storedPosts || storedVersion !== SEED_VERSION) {
+      // First time or new seed version → use Diwali seed
+      set({ posts: POSTS });
+      localStorage.setItem("posts:today", JSON.stringify(POSTS));
+      localStorage.setItem("seedVersion", SEED_VERSION);
+    } else {
+      // Already seeded → load from storage
+      set({ posts: JSON.parse(storedPosts) });
     }
   },
-
   addPost: (post) => {
-    const { todayKey, posts } = get();
-    const newPosts = [post, ...posts];
-    set({ posts: newPosts });
-    setJSON("posts:" + todayKey, newPosts);
+    set((state) => {
+      const updated = [post, ...state.posts];
+      localStorage.setItem("posts:today", JSON.stringify(updated));
+      return { posts: updated };
+    });
   },
 }));
