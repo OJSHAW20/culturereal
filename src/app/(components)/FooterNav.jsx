@@ -19,12 +19,13 @@ function Tab({ href, label }) {
 }
 
 export default function FooterNav() {
-  return (
-    <nav className="sticky bottom-0 border-t bg-white">
-      <div className="flex px-2 max-w-md mx-auto">
-        <Tab href="/" label="Feed" />
-        <Tab href="/info" label="Info" />
-      </div>
-    </nav>
-  );
-}
+    return (
+      <nav className="sticky bottom-0 border-t bg-white">
+        <div className="flex px-2 max-w-md mx-auto">
+          <Tab href="/" label="Feed" />
+          <Tab href="/info" label="Info" />
+          <Tab href="/post" label="Post" />   {/* ← add this */}
+        </div>
+      </nav>
+    );
+  }
