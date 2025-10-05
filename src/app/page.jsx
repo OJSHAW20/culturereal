@@ -1,3 +1,5 @@
+"use client";
+
 import Header from "./(components)/Header";
 import FooterNav from "./(components)/FooterNav";
 import FeedList from "./(components)/FeedList";

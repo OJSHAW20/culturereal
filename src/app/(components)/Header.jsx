@@ -1,15 +1,39 @@
 "use client";
-import { getTodayPrompt } from "@/data/dailyEvent.seed";
+import { useState } from "react";
+import { getTodayEvent } from "@/data/dailyEvent.seed";
 
 export default function Header() {
-  const prompt = getTodayPrompt();
+  const { title, description } = getTodayEvent();
+  const [open, setOpen] = useState(false);
+
   return (
     <header className="sticky top-0 z-10 bg-white/90 backdrop-blur">
-  <div className="px-4 py-3">
-    <h1 className="text-xl font-semibold">culturereal</h1>
-    <p className="text-sm text-gray-600 mt-1">Event of the day: <span className="font-medium">{prompt}</span></p>
-  </div>
-  <div className="border-t" />
-</header>
+      <div className="px-4 pt-3">
+        <h1 className="text-xl font-semibold">culturereal</h1>
+        <p className="text-sm text-gray-700 mt-1">
+          <span className="font-medium">Event of the day:</span> {title}
+        </p>
+
+        <div className="mt-2">
+          <button
+            onClick={() => setOpen(!open)}
+            className="text-xs text-gray-600 underline underline-offset-4 hover:text-gray-800"
+            aria-expanded={open}
+            aria-controls="event-desc"
+          >
+            {open ? "Hide info" : "More about today’s event"}
+          </button>
+          <div
+            id="event-desc"
+            className={`transition-all overflow-hidden ${
+              open ? "max-h-40" : "max-h-0"
+            }`}
+          >
+            <p className="text-sm text-gray-600 mt-2 pr-1">{description}</p>
+          </div>
+        </div>
+      </div>
+      <div className="mt-3 border-t" />
+    </header>
   );
 }
