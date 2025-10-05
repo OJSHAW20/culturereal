@@ -12,7 +12,7 @@ export default function ProfilePage() {
   const userPosts = posts.filter((p) => p.userName === userName);
 
   // Count unique cultures they've posted about
-  const cultures = new Set(userPosts.map((p) => p.culture)).size;
+  const cultures = new Set(userPosts.map((p) => p.origin || p.culture)).size;
 
   // Simple streak logic (per day keys stored)
   let streak = 0;
@@ -56,11 +56,14 @@ export default function ProfilePage() {
             {userPosts.length === 0 && (
               <p className="text-sm text-gray-500">You haven’t posted yet.</p>
             )}
-            {userPosts.map((p) => (
-              <div key={p.id} className="border rounded-lg overflow-hidden bg-white">
+            {userPosts.map((p, i) => (
+                <div
+                    key={`${i}-${p.createdAt ?? ""}`}
+                    className="border rounded-lg overflow-hidden bg-white"
+                >
                 <img src={p.imageUrl} alt={p.caption} className="w-full h-40 object-cover" />
                 <div className="p-2">
-                  <p className="text-sm font-medium">{p.culture} — {p.country}</p>
+                <p className="text-sm font-medium">{p.origin || p.culture}</p>
                   <p className="text-xs text-gray-600">{p.caption}</p>
                 </div>
               </div>

@@ -1,79 +1,72 @@
 "use client";
-import { useState } from "react";
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { getTodayEvent } from "@/data/dailyEvent.seed";
-import useUtcCountdown from "./useUtcCountdown";
+import { useMemo } from "react";
+import { Clock } from "lucide-react";
 
 export default function Header() {
-  const { title, description } = getTodayEvent();
-  const [open, setOpen] = useState(false);
-  const remaining = useUtcCountdown();
+  const pathname = usePathname();
+  const isHome = pathname === "/"; // only show event block on home
 
-  // add this small helper inside the component (above return)
-  const preview = (() => {
-    // two-sentence preview
-    const parts = (description || "").split(/(?<=[.!?])\s+/).slice(0, 2).join(" ");
-    return parts || description;
-  })();
+  const { title, description } = getTodayEvent();
+
+  // Countdown until 00:00 UTC
+  const countdown = useMemo(() => {
+    const now = new Date();
+    const next = new Date();
+    next.setUTCHours(24, 0, 0, 0);
+    const diff = next.getTime() - now.getTime();
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    return `${hours}h ${minutes}m`;
+  }, []);
+
+  // First sentence preview from description
+  const preview = useMemo(() => {
+    if (!description) return "";
+    const match = description.match(/.*?[.!?](\s|$)/);
+    return (match ? match[0] : description).trim();
+  }, [description]);
 
   return (
-    <header className="sticky top-0 z-10 bg-white/85 backdrop-blur supports-[backdrop-filter]:bg-white/70">
-      <div className="pt-4">
-        {/* brand + countdown */}
-        <div className="flex items-center justify-between">
-          {/* BeTogether with globe as the 'o' */}
-          <h1 className="text-3xl font-extrabold tracking-tight">
-            BeT<span role="img" aria-label="globe" className="inline-block align-[-1px]">🌍</span>gether
-          </h1>
+    <header className="mb-6">
+      {/* Top bar: brand + countdown */}
+      <div className="flex items-center justify-between">
+        <h1 className="text-3xl font-extrabold tracking-tight">
+          BeT<span role="img" aria-label="globe">🌍</span>gether
+        </h1>
 
-          <span className="inline-flex items-center gap-1 rounded-full border border-indigo-200 bg-indigo-50 px-2.5 py-1 text-xs font-medium text-indigo-800 shadow-sm">
-            ⏱️ {remaining}
-            <span className="ml-0.5 text-[10px] text-indigo-600">to 00:00 UTC</span>
-          </span>
-        </div>
-
-        {/* event line */}
-        <p className="mt-2 text-[16px] text-gray-900">
-          <span className="mr-1 inline-block h-2 w-2 translate-y-[-1px] rounded-full bg-indigo-500" />
-          <span className="font-semibold">Event of the day:</span>{" "}
-          <span className="font-medium">{title}</span>
-        </p>
-
-        {/* toggle */}
-        <button
-          onClick={() => setOpen(!open)}
-          className="group mt-2 inline-flex items-center gap-2 text-sm text-gray-700 hover:text-gray-900"
-          aria-expanded={open}
-          aria-controls="event-desc"
-        >
-          <svg
-            className={`h-5 w-5 text-gray-500 transition-transform group-hover:text-gray-700 ${open ? "rotate-180" : ""}`}
-            viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"
-          >
-            <path d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 10.17l3.71-2.94a.75.75 0 1 1 .94 1.16l-4.24 3.36a.75.75 0 0 1-.94 0L5.21 8.39a.75.75 0 0 1 .02-1.18z"/>
-          </svg>
-          <span className="underline underline-offset-4 decoration-gray-400">
-            {open ? "Hide info" : "More about today’s event"}
-          </span>
-        </button>
-
-        {/* accordion */}
-        <div
-          id="event-desc"
-          className={`transition-all overflow-hidden ${open ? "max-h-40" : "max-h-0"}`}
-        >
-          <p className="mt-2 text-sm text-gray-700 pr-1">
-            {preview}{" "}
-            <a
-              href="/info"
-              className="inline text-indigo-700 hover:text-indigo-900 underline underline-offset-4 ml-1"
-            >
-              See more on Info →
-            </a>
-          </p>
-        </div>
+        {isHome && (
+          <div className="flex items-center gap-1 rounded-full border border-indigo-100 bg-indigo-50 px-3 py-1 text-xs font-medium text-indigo-800 shadow-sm">
+          <Clock size={14} className="inline-block mr-1 text-indigo-800" />
+          {countdown} <span className="ml-1 text-indigo-400">to 00:00 UTC</span>
+         </div>
+        
+        )}
       </div>
 
-      <div className="mt-3 border-t border-gray-200" />
+      {/* Centered event block */}
+      {isHome && (
+        <div className="mt-4 text-center">
+          <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">
+            Event of the Day
+          </p>
+          <h2 className="mt-1 text-xl font-bold text-gray-900">{title}</h2>
+          {preview && (
+            <p className="mt-1 text-sm text-gray-600">{preview}</p>
+          )}
+          <Link
+            href="/info"
+            className="mt-2 inline-block text-xs text-indigo-400 hover:text-indigo-600 underline underline-offset-4"
+          >
+            More about today’s event
+          </Link>
+        </div>
+      )}
+
+      <div className="mt-4 border-t border-gray-200" />
     </header>
   );
 }

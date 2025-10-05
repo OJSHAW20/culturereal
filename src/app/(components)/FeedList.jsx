@@ -33,7 +33,12 @@ export default function FeedList() {
             No posts match this theme yet.
           </div>
         ) : (
-          displayPosts.map((p) => <PostCard key={p.id} post={p} />)
+            displayPosts.map((p, i) => (
+                <PostCard
+                  key={`${i}-${p.userName ?? "user"}`}
+                  post={p}
+                />
+              ))
         )}
       </div>
     </>

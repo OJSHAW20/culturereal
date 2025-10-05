@@ -21,7 +21,7 @@ export default function PostPage() {
   const [imageUrl, setImageUrl] = useState("");
   const [caption, setCaption] = useState("");
   const [theme, setTheme] = useState("");
-  const [origin, setOrigin] = useState(""); // new: Culture & country
+  const [origin, setOrigin] = useState(""); 
   const [error, setError] = useState("");
 
   const onSubmit = (e) => {
@@ -36,11 +36,10 @@ export default function PostPage() {
     const userName = localStorage.getItem("user") || "Guest";
 
     const post = {
-      id: String(Date.now()),
+      id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
       userName,
-      // store origin in both 'origin' and 'culture' for stats + chips
-      origin,              // e.g. "Yoruba — Nigeria" or "Yoruba (Nigeria)"
-      culture: origin,     // keep existing stats logic working
+      origin,
+      culture: origin,
       imageUrl,
       caption,
       theme,
@@ -57,20 +56,47 @@ export default function PostPage() {
       <main className="p-4 space-y-4">
         <h2 className="text-xl font-semibold">Create a post</h2>
         <p className="text-sm text-gray-600">
-          Share an <span className="font-medium">image URL</span>, a short caption, a theme, and your culture & country.
+          Share an <span className="font-medium">image</span>, a short caption, a theme, and your culture & country.
         </p>
 
         <form onSubmit={onSubmit} className="rounded-2xl border border-gray-200 bg-white shadow-sm p-4 space-y-4">
+          {/* IMAGE SECTION */}
           <div>
-            <label className="block text-sm font-medium">Image URL</label>
+            <label className="block text-sm font-medium">Image</label>
             <input
               type="url"
               placeholder="https://images.unsplash.com/..."
               value={imageUrl}
               onChange={(e) => setImageUrl(e.target.value)}
               className="mt-1 w-full rounded-xl border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              required
             />
+
+            {/* 📎 Custom upload button */}
+            <div className="mt-2">
+              <label
+                htmlFor="file-upload"
+                className="cursor-pointer inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-gray-50 px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 transition"
+              >
+                📎 Upload an image
+              </label>
+              <input
+                id="file-upload"
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={(e) => {
+                  const file = e.target.files[0];
+                  if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                      setImageUrl(event.target.result);
+                    };
+                    reader.readAsDataURL(file);
+                  }
+                }}
+              />
+            </div>
+
             {imageUrl ? (
               <div className="mt-3 w-full overflow-hidden rounded-xl bg-gray-100 ring-1 ring-black/5" style={{ height: 180 }}>
                 <img src={imageUrl} alt="preview" className="w-full h-full object-cover block" />
@@ -78,6 +104,7 @@ export default function PostPage() {
             ) : null}
           </div>
 
+          {/* CAPTION */}
           <div>
             <label className="block text-sm font-medium">Caption</label>
             <input
@@ -91,8 +118,9 @@ export default function PostPage() {
             />
           </div>
 
+          {/* THEME + ORIGIN */}
           <div className="grid grid-cols-2 gap-3">
-            <div className="col-span-2 sm:col-span-1">
+            <div>
               <label className="block text-sm font-medium">Theme</label>
               <select
                 value={theme}
@@ -107,7 +135,7 @@ export default function PostPage() {
               </select>
             </div>
 
-            <div className="col-span-2 sm:col-span-1">
+            <div>
               <label className="block text-sm font-medium">Culture & country</label>
               <input
                 type="text"
@@ -120,8 +148,10 @@ export default function PostPage() {
             </div>
           </div>
 
+          {/* ERROR */}
           {error ? <p className="text-sm text-red-600">{error}</p> : null}
 
+          {/* BUTTONS */}
           <div className="pt-1 flex gap-2">
             <button
               type="submit"
@@ -138,10 +168,6 @@ export default function PostPage() {
             </button>
           </div>
         </form>
-
-        <p className="text-xs text-gray-500">
-          Tip: Use a reliable URL (Unsplash, Pexels, Wikimedia) for best results.
-        </p>
       </main>
       <FooterNav />
     </>
