@@ -1,15 +1,15 @@
 export const POSTS = [
     {
-      id: "p1",
-      userName: "Aisha",
+      id: "guest1",
+      userName: "Guest",
       culture: "Yoruba",
       country: "Nigeria",
       imageUrl: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4",
       caption: "Jollof on a Sunday 🥘",
     },
     {
-      id: "p2",
-      userName: "Euan",
+      id: "guest1",
+      userName: "Guest",
       culture: "Gaelic",
       country: "Scotland",
       imageUrl: "https://images.unsplash.com/photo-1501785888041-af3ef285b470",

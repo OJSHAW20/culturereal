@@ -24,7 +24,8 @@ export default function FooterNav() {
         <div className="flex px-2 max-w-md mx-auto">
           <Tab href="/" label="Feed" />
           <Tab href="/info" label="Info" />
-          <Tab href="/post" label="Post" />   {/* ← add this */}
+          <Tab href="/post" label="Post" />   
+          <Tab href="/profile" label="Profile" />  
         </div>
       </nav>
     );

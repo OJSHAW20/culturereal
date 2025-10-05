@@ -16,6 +16,16 @@ export default function PostPage() {
   const [country, setCountry] = useState("");
   const [error, setError] = useState("");
 
+  const THEMES = [
+    "Sharing a meal",
+    "Being with family",
+    "Partying",
+    "Celebration",
+    "Tradition",
+  ];
+
+  const [theme, setTheme] = useState("");
+
   const onSubmit = (e) => {
     e.preventDefault();
     setError("");
@@ -28,11 +38,12 @@ export default function PostPage() {
 
     const post = {
       id: String(Date.now()),
-      userName: "Guest",
+      userName: localStorage.getItem("user") || "Guest",
       culture,
       country,
       imageUrl,
       caption,
+      theme, 
       createdAt: new Date().toISOString(),
       reactions: 0, // baseline for future
     };
@@ -85,6 +96,21 @@ export default function PostPage() {
               required
             />
           </div>
+
+          <div>
+            <label className="block text-sm font-medium">Theme</label>
+            <select
+                value={theme}
+                onChange={(e) => setTheme(e.target.value)}
+                className="mt-1 w-full rounded-lg border px-3 py-2 text-sm"
+                required
+            >
+                <option value="">Select a theme</option>
+                {THEMES.map((t) => (
+                <option key={t} value={t}>{t}</option>
+                ))}
+            </select>
+            </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div>

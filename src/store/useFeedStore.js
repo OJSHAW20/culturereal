@@ -7,6 +7,8 @@ const dayKey = () => new Date().toISOString().slice(0, 10);
 export const useFeedStore = create((set, get) => ({
   todayKey: dayKey(),
   posts: [],
+  selectedTheme: "Random",
+  setSelectedTheme: (t) => set({ selectedTheme: t }),
 
   init: () => {
     const key = dayKey();
